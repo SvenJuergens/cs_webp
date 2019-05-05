@@ -17,13 +17,10 @@
 	"type": "git"
   },
   "replace": {
-	"cs_webp": "*",
-	"cs_clear_images": "*"
+	"cs_webp": "*"
   },
   "require": {
-	"typo3/cms-core": "7.6"
-  },
-  "suggest": {
+	"typo3/cms-core": ">=7.6.0 <9.0.0"
   },
   "autoload": {
 	"psr-4": {
