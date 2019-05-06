@@ -27,14 +27,17 @@ namespace Clickstorm\CsWebp\Hook;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Backend\Toolbar\ClearCacheActionsHookInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Resource\ProcessedFileRepository;
 use TYPO3\CMS\Core\Cache\CacheManager;
 
-class ClearImages implements \TYPO3\CMS\Backend\Toolbar\ClearCacheActionsHookInterface
+class ClearImages implements ClearCacheActionsHookInterface
 {
+    static public $itemKey = 'tx_cswebp';
+
     /**
      * Add an entry to the CacheMenuItems array
      *
@@ -47,7 +50,7 @@ class ClearImages implements \TYPO3\CMS\Backend\Toolbar\ClearCacheActionsHookInt
 
             // Clearing of processed images
             $cacheActions[] = [
-                'id' => 'tx_cswebp',
+                'id' => self::$itemKey,
                 'title' => 'LLL:EXT:cs_webp/Resources/Private/Language/de.locallang.xlf:cache_action.title',
                 'description' => 'LLL:EXT:cs_webp/Resources/Private/Language/de.locallang.xlf:cache_action.description',
                 'href' => BackendUtility::getModuleUrl('tce_db', [
