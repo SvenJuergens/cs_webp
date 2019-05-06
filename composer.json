@@ -1,30 +1,20 @@
 {
-  "name": "clickstorm/cs_webp",
+  "name": "svenjuergens/cs-webp",
   "type": "typo3-cms-extension",
   "description": "[clickstorm] Convert images to webp",
-  "homepage": "https://www.clickstorm.de",
-  "license": [
-	"GPL-2.0+"
-  ],
-  "keywords": [
-	"typo3",
-	"cms",
-	"clickstorm"
-  ],
-  "version": "1.1.2-dev",
-  "dist": {
-	"url": "https://github.com/clickstorm/cs_webp.git",
-	"type": "git"
-  },
-  "replace": {
-	"cs_webp": "*"
-  },
+  "license": "GPL-2.0-or-later",
+  "keywords": ["typo3", "cms", "clickstorm"],
+  "version": "2.0.0",
   "require": {
-	"typo3/cms-core": ">=7.6.0 <9.0.0"
+    "typo3/cms-core": "^9.5"
   },
   "autoload": {
 	"psr-4": {
 	  "Clickstorm\\CsWebp\\": "Classes/"
 	}
+  },
+  "replace": {
+    "cs_webp": "self.version",
+    "typo3-ter/cs-webp": "self.version"
   }
 }

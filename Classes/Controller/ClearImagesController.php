@@ -19,6 +19,8 @@ namespace Clickstorm\CsWebp\Controller;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Cache\CacheManager;
+use TYPO3\CMS\Core\Cache\Exception\NoSuchCacheGroupException;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Resource\ProcessedFileRepository;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -30,7 +32,7 @@ class ClearImagesController
      * @param ServerRequestInterface $request
      * @param ResponseInterface $response
      * @return ResponseInterface
-     * @throws \TYPO3\CMS\Core\Cache\Exception\NoSuchCacheGroupException
+     * @throws NoSuchCacheGroupException
      */
     public static function clearImages(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
@@ -41,7 +43,7 @@ class ClearImagesController
         // remove all processed files
         $repository->removeAll();
 
-       $command = sprintf('rm -rf %sfileadmin/_processed_/*', PATH_site);
+       $command = sprintf('rm -rf %sfileadmin/_processed_/*', Environment::getPublicPath() . '/');
        CommandUtility::exec($command);
 
         // clear page caches

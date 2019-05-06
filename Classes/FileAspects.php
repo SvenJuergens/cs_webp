@@ -2,6 +2,7 @@
 namespace Clickstorm\CsWebp;
 
 use Clickstorm\CsWebp\Service\OptimizeImageService;
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class FileAspects {
@@ -25,7 +26,7 @@ class FileAspects {
 	public function processFile($fileProcessingService, $driver, $processedFile) {
 		if ($processedFile->isUpdated() === TRUE) {
 			// ToDo: Find better possibility for getPublicUrl()
-			$this->service->process(PATH_site . $processedFile->getPublicUrl(), $processedFile->getExtension());
+			$this->service->process(Environment::getPublicPath() . '/' . $processedFile->getPublicUrl(), $processedFile->getExtension());
 		}
 	}
 }
