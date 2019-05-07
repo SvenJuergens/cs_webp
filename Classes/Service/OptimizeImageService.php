@@ -45,7 +45,14 @@ class OptimizeImageService {
             $returnValue = 0;
             CommandUtility::exec($command, $output, $returnValue);
             if ((bool)$this->configuration['debug'] === TRUE && is_object($GLOBALS['BE_USER'])) {
-                $GLOBALS['BE_USER']->writelog($command . ' exited with ' . $returnValue . '. Output was: ' . implode(' ', $output), 'cs_webp', 0);
+                $GLOBALS['BE_USER']->writelog(
+                    4,
+                    0,
+                    0,
+                    0,
+                    '[cs_webp] '. $command . ' exited with ' . $returnValue . '. Output was: ' . implode(' ', $output),
+                    []
+                );
             }
         }
 	}
