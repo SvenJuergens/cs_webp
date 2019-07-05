@@ -21,6 +21,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Exception\NoSuchCacheGroupException;
 use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Core\Http\HtmlResponse;
 use TYPO3\CMS\Core\Resource\ProcessedFileRepository;
 use TYPO3\CMS\Core\Utility\CommandUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -30,13 +31,11 @@ class ClearImagesController
     /**
      * This method is called by the CacheMenuItem in the Backend
      * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
      * @return ResponseInterface
      * @throws NoSuchCacheGroupException
      */
-    public static function clearImages(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+    public static function clearImages(ServerRequestInterface $request): ResponseInterface
     {
-
         $repository = GeneralUtility::makeInstance(ProcessedFileRepository::class);
         $cacheManager = GeneralUtility::makeInstance(CacheManager::class);
 
@@ -48,8 +47,6 @@ class ClearImagesController
 
         // clear page caches
         $cacheManager->flushCachesInGroup('pages');
-        $response->getBody()->write('');
-        return $response;
-
+        return new HtmlResponse('');
     }
 }
