@@ -1,0 +1,14 @@
+services:
+  # general settings
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  SvenJuergens\CsWebp\:
+    resource: '../Classes/*'
+
+  SvenJuergens\CsWebp\EventListener\AfterFileProcessing:
+    tags:
+      - name: event.listener
+        event: TYPO3\CMS\Core\Resource\Event\AfterFileProcessingEvent

@@ -12,5 +12,5 @@ defined('TYPO3_MODE') or die();
 
     // The Backend-MenuItem in ClearCache-Pulldown
     $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['additionalBackendItems']['cacheActions']['tx_cswebp'] =
-        \Clickstorm\CsWebp\Toolbar\ToolbarItem::class;
+        \SvenJuergens\CsWebp\Toolbar\ToolbarItem::class;
 })();

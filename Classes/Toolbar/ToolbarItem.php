@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Clickstorm\CsWebp\Toolbar;
+namespace SvenJuergens\CsWebp\Toolbar;
 
 /**
  * This file is part of the TYPO3 CMS project.
@@ -33,7 +33,7 @@ class ToolbarItem implements ClearCacheActionsHookInterface
      * @param array $optionValues Array of AccessConfigurations-identifiers (typically used by userTS with options.clearCache.identifier)
      * @return void
      */
-    public function manipulateCacheActions(&$cacheActions, &$optionValues)
+    public function manipulateCacheActions(&$cacheActions, &$optionValues): void
     {
         // First check if user has right to access the flush language cache item
         $tsConfig = $this->getBackendUser()->getTSConfig();
@@ -45,8 +45,8 @@ class ToolbarItem implements ClearCacheActionsHookInterface
                 $uri = $uriBuilder->buildUriFromRoute('tx_cswebp');
                 $cacheActions[] = [
                     'id' => self::$itemKey,
-                    'title' => 'LLL:EXT:cs_webp/Resources/Private/Language/de.locallang.xlf:cache_action.title',
-                    'description' => 'LLL:EXT:cs_webp/Resources/Private/Language/de.locallang.xlf:cache_action.description',
+                    'title' => 'LLL:EXT:cs_webp/Resources/Private/Language/locallang.xlf:cache_action.title',
+                    'description' => 'LLL:EXT:cs_webp/Resources/Private/Language/locallang.xlf:cache_action.description',
                     'href' => $uri,
                     'iconIdentifier' => 'ext-cswebp-clear-processed-images'
                 ];

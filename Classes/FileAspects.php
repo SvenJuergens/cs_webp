@@ -1,7 +1,10 @@
 <?php
-namespace Clickstorm\CsWebp;
+namespace SvenJuergens\CsWebp;
 
-use Clickstorm\CsWebp\Service\OptimizeImageService;
+use TYPO3\CMS\Core\Resource\Service\FileProcessingService;
+use TYPO3\CMS\Core\Resource\Driver\DriverInterface;
+use TYPO3\CMS\Core\Resource\ProcessedFile;
+use SvenJuergens\CsWebp\Service\OptimizeImageService;
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -17,13 +20,13 @@ class FileAspects {
 	}
 
 	/**
-	 * Called when a file was processed
-	 *
-	 * @param \TYPO3\CMS\Core\Resource\Service\FileProcessingService $fileProcessingService
-	 * @param \TYPO3\CMS\Core\Resource\Driver\DriverInterface $driver
-	 * @param \TYPO3\CMS\Core\Resource\ProcessedFile $processedFile
-	 */
-	public function processFile($fileProcessingService, $driver, $processedFile) {
+  * Called when a file was processed
+  *
+  * @param FileProcessingService $fileProcessingService
+  * @param DriverInterface $driver
+  * @param ProcessedFile $processedFile
+  */
+ public function processFile($fileProcessingService, $driver, $processedFile) {
 		if ($processedFile->isUpdated() === TRUE) {
 			// ToDo: Find better possibility for getPublicUrl()
 			$this->service->process(Environment::getPublicPath() . '/' . $processedFile->getPublicUrl(), $processedFile->getExtension());

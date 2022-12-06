@@ -2,6 +2,6 @@
 return [
     'tx_cswebp' => [
         'path' => '/cs_webp/clear',
-        'target' => \Clickstorm\CsWebp\Controller\ClearImagesController::class . '::clearImages'
+        'target' => \SvenJuergens\CsWebp\Controller\ClearImagesController::class . '::clearImages'
     ]
 ];
