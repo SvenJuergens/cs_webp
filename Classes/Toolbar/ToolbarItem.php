@@ -37,7 +37,7 @@ class ToolbarItem implements ClearCacheActionsHookInterface
     {
         // First check if user has right to access the flush language cache item
         $tsConfig = $this->getBackendUser()->getTSConfig();
-        $option = (bool)$tsConfig['options.']['clearCache.']['tx_cswebp'];
+        $option = (bool)($tsConfig['options.']['clearCache.']['tx_cswebp'] ?? false);
         if ($option || $this->getBackendUser()->isAdmin()) {
             /** @var UriBuilder $uriBuilder */
             $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
