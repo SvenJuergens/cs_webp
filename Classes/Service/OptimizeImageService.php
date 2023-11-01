@@ -8,13 +8,14 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 
 class OptimizeImageService {
-    public $configuration;
 
     /**
      * Initialize
+     * @param array $extensionConfiguration
      */
-    public function __construct() {
-        $this->configuration = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('cs_webp');
+    public function __construct(
+        protected array $extensionConfiguration
+    ) {
     }
 
     /**
@@ -28,7 +29,6 @@ class OptimizeImageService {
         if (!file_exists($file)) {
             return false;
         }
-
 		if ($extension === NULL) {
 			$pathInfo = pathinfo($file);
 			if ($pathInfo['extension'] !== NULL) {
@@ -39,10 +39,10 @@ class OptimizeImageService {
 
 		if (($extension === 'jpg' || $extension === 'jpeg' || $extension === 'png') && strpos($file, 'fileadmin/_processed_') !== false) {
             $webpFile = str_replace("." . $extension, ".webp", $file);
-            $quality = MathUtility::forceIntegerInRange($this->configuration['quality'],1,100);
+            $quality = MathUtility::forceIntegerInRange($this->extensionConfiguration['quality'],1,100);
             $command = sprintf('convert %s -quality %s -define webp:lossless=true %s', $file, $quality, $webpFile);
-            if(isset($this->configuration['useCwebp']) && (bool)$this->configuration['useCwebp'] === true){
-                $command = sprintf('%s -q %s %s -o %s', $this->configuration['cwebpPath'], $quality, $file, $webpFile);
+            if(isset($this->extensionConfiguration['useCwebp']) && (bool)$this->extensionConfiguration['useCwebp'] === true){
+                $command = sprintf('%s -q %s %s -o %s', $this->extensionConfiguration['cwebpPath'], $quality, $file, $webpFile);
             }
 		}
 
@@ -50,7 +50,7 @@ class OptimizeImageService {
             $output = [];
             $returnValue = 0;
             CommandUtility::exec(escapeshellcmd($command), $output, $returnValue);
-            if ((bool)$this->configuration['debug'] === TRUE && is_object($this->getBackendUser())) {
+            if ((bool)$this->extensionConfiguration['debug'] === TRUE && is_object($this->getBackendUser())) {
                 $this->getBackendUser()->writelog(
                     4,
                     0,
@@ -63,10 +63,11 @@ class OptimizeImageService {
             GeneralUtility::fixPermissions($file);
         }
 	}
+
     /**
      * Returns the current BE user.
      *
-     * @return BackendUserAuthentication
+     * @return BackendUserAuthentication|null
      */
     protected function getBackendUser(): ?BackendUserAuthentication
     {
