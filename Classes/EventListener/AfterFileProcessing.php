@@ -7,11 +7,11 @@ use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\Resource\Event\AfterFileProcessingEvent;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class AfterFileProcessing {
-
+class AfterFileProcessing
+{
     public function __invoke(AfterFileProcessingEvent $event): void
     {
-        if ($event->getProcessedFile()->isUpdated() === TRUE) {
+        if ($event->getProcessedFile()->isUpdated() === true) {
             $service = GeneralUtility::makeInstance(OptimizeImageService::class);
             $service->process(
                 Environment::getPublicPath() . '/' . ltrim($event->getProcessedFile()->getPublicUrl(), '/'),
