@@ -40,7 +40,7 @@ class OptimizeImageService
         if (($extension === 'jpg' || $extension === 'jpeg' || $extension === 'png') && str_contains($file, 'fileadmin/_processed_')) {
             $webpFile = str_replace('.' . $extension, '.webp', $file);
             $quality = MathUtility::forceIntegerInRange($this->extensionConfiguration['quality'], 1, 100);
-            $command = sprintf('convert %s -quality %s -define webp:lossless=true %s', $file, $quality, $webpFile);
+            $command = sprintf('convert %s -quality %s %s', $file, $quality, $webpFile);
             if (isset($this->extensionConfiguration['useCwebp']) && (bool)$this->extensionConfiguration['useCwebp'] === true) {
                 $command = sprintf('%s -q %s %s -o %s', $this->extensionConfiguration['cwebpPath'], $quality, $file, $webpFile);
             }
