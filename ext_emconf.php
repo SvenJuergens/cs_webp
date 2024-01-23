@@ -12,10 +12,10 @@ $EM_CONF[$_EXTKEY] = [
     'author_email' => 't3YYYY@blue-side.de',
     'state' => 'stable',
     'clearCacheOnLoad' => true,
-    'version' => '4.0.0',
+    'version' => '5.0.0',
     'constraints' => [
         'depends' => [
-            'typo3' => '11.5.30-11.5.99',
+            'typo3' => '11.5.30-12.9.99',
         ],
         'conflicts' => [],
         'suggests' => [],
