@@ -1,5 +1,5 @@
 # cat=basic/quality/500; type=integer; label=Webp Quality (0 - 100)
-quality = 65
+quality = 75
 
 # cat=basic/debug/1000; type=boolean; label=Enable Debugging. The output goes to backend log module when you are logged in
 debug = 0
