@@ -37,31 +37,49 @@ class OptimizeImageService
         }
         $extension = strtolower((string)$extension);
 
-        if (($extension === 'jpg' || $extension === 'jpeg' || $extension === 'png') && str_contains($file, 'fileadmin/_processed_')) {
-            $webpFile = str_replace('.' . $extension, '.webp', $file);
-            $quality = MathUtility::forceIntegerInRange($this->extensionConfiguration['quality'], 1, 100);
-            $command = sprintf('convert %s -quality %s %s', $file, $quality, $webpFile);
-            if (isset($this->extensionConfiguration['useCwebp']) && (bool)$this->extensionConfiguration['useCwebp'] === true) {
-                $command = sprintf('%s -q %s %s -o %s', $this->extensionConfiguration['cwebpPath'], $quality, $file, $webpFile);
-            }
+        if (!in_array($extension, ['jpg', 'jpeg', 'png'], true)) {
+            return;
+        }
+        if (!str_contains($file, 'fileadmin/_processed_')) {
+            return;
         }
 
-        if (isset($command)) {
-            $output = [];
-            $returnValue = 0;
-            CommandUtility::exec(escapeshellcmd($command), $output, $returnValue);
-            if ((bool)$this->extensionConfiguration['debug'] === true && is_object($this->getBackendUser())) {
-                $this->getBackendUser()->writelog(
-                    4,
-                    0,
-                    0,
-                    0,
-                    '[cs_webp] ' . htmlspecialchars($command) . ' exited with ' . htmlspecialchars((string)$returnValue) . '. Output was: ' . htmlspecialchars(implode(' ', $output)),
-                    []
-                );
-            }
-            GeneralUtility::fixPermissions($file);
+        $webpFile = str_replace('.' . $extension, '.webp', $file);
+        $quality = MathUtility::forceIntegerInRange((int)($this->extensionConfiguration['quality'] ?? 75), 1, 100);
+        $useCwebp = (bool)($this->extensionConfiguration['useCwebp'] ?? false);
+
+        if ($useCwebp) {
+            $command = sprintf(
+                '%s -q %s %s -o %s',
+                escapeshellcmd((string)($this->extensionConfiguration['cwebpPath'] ?? 'cwebp')),
+                escapeshellarg((string)$quality),
+                escapeshellarg($file),
+                escapeshellarg($webpFile)
+            );
+        } else {
+            $command = sprintf(
+                'convert %s -quality %s %s',
+                escapeshellarg($file),
+                escapeshellarg((string)$quality),
+                escapeshellarg($webpFile)
+            );
         }
+
+        $output = [];
+        $returnValue = 0;
+        CommandUtility::exec($command, $output, $returnValue);
+
+        if ((bool)($this->extensionConfiguration['debug'] ?? false) && $this->getBackendUser() !== null) {
+            $this->getBackendUser()->writelog(
+                4,
+                0,
+                0,
+                0,
+                '[cs_webp] ' . htmlspecialchars($command) . ' exited with ' . htmlspecialchars((string)$returnValue) . '. Output was: ' . htmlspecialchars(implode(' ', $output)),
+                []
+            );
+        }
+        GeneralUtility::fixPermissions($file);
     }
 
     /**
