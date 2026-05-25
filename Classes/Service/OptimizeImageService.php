@@ -66,7 +66,7 @@ class OptimizeImageService
                 0,
                 0,
                 0,
-                '[cs_webp] ' . htmlspecialchars($command) . ' exited with ' . htmlspecialchars((string)$returnValue) . '. Output was: ' . htmlspecialchars(implode(' ', $output)),
+                sprintf('[cs_webp] %s exited with %d. Output was: %s', $command, $returnValue, implode(' ', $output)),
                 []
             );
         }
