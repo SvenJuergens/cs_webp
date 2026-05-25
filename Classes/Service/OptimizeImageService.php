@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SvenJuergens\CsWebp\Service;
 
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
@@ -9,66 +11,68 @@ use TYPO3\CMS\Core\Utility\MathUtility;
 
 class OptimizeImageService
 {
-    /**
-     * Initialize
-     * @param array $extensionConfiguration
-     */
     public function __construct(
         protected array $extensionConfiguration
     ) {}
 
-    /**
-     * Perform image optimization
-     *
-     * @param string $file
-     * @param string|null $extension
-     * @return false|void
-     */
-    public function process(string $file, string $extension = null)
+    public function process(string $file, ?string $extension = null): void
     {
         if (!file_exists($file)) {
-            return false;
+            return;
         }
         if ($extension === null) {
             $pathInfo = pathinfo($file);
-            if ($pathInfo['extension'] !== null) {
+            if (isset($pathInfo['extension'])) {
                 $extension = $pathInfo['extension'];
             }
         }
-        $extension = strtolower($extension);
+        $extension = strtolower((string)$extension);
 
-        if (($extension === 'jpg' || $extension === 'jpeg' || $extension === 'png') && str_contains($file, 'fileadmin/_processed_')) {
-            $webpFile = str_replace('.' . $extension, '.webp', $file);
-            $quality = MathUtility::forceIntegerInRange($this->extensionConfiguration['quality'], 1, 100);
-            $command = sprintf('convert %s -quality %s %s', $file, $quality, $webpFile);
-            if (isset($this->extensionConfiguration['useCwebp']) && (bool)$this->extensionConfiguration['useCwebp'] === true) {
-                $command = sprintf('%s -q %s %s -o %s', $this->extensionConfiguration['cwebpPath'], $quality, $file, $webpFile);
-            }
+        if (!in_array($extension, ['jpg', 'jpeg', 'png'], true)) {
+            return;
+        }
+        if (!str_contains($file, 'fileadmin/_processed_')) {
+            return;
         }
 
-        if (isset($command)) {
-            $output = [];
-            $returnValue = 0;
-            CommandUtility::exec(escapeshellcmd($command), $output, $returnValue);
-            if ((bool)$this->extensionConfiguration['debug'] === true && is_object($this->getBackendUser())) {
-                $this->getBackendUser()->writelog(
-                    4,
-                    0,
-                    0,
-                    0,
-                    '[cs_webp] ' . htmlspecialchars($command) . ' exited with ' . htmlspecialchars((string)$returnValue) . '. Output was: ' . htmlspecialchars(implode(' ', $output)),
-                    []
-                );
-            }
-            GeneralUtility::fixPermissions($file);
+        $webpFile = str_replace('.' . $extension, '.webp', $file);
+        $quality = MathUtility::forceIntegerInRange((int)($this->extensionConfiguration['quality'] ?? 75), 1, 100);
+        $useCwebp = (bool)($this->extensionConfiguration['useCwebp'] ?? false);
+
+        if ($useCwebp) {
+            $command = sprintf(
+                '%s -q %s %s -o %s',
+                escapeshellcmd((string)($this->extensionConfiguration['cwebpPath'] ?? 'cwebp')),
+                escapeshellarg((string)$quality),
+                escapeshellarg($file),
+                escapeshellarg($webpFile)
+            );
+        } else {
+            $command = sprintf(
+                'convert %s -quality %s %s',
+                escapeshellarg($file),
+                escapeshellarg((string)$quality),
+                escapeshellarg($webpFile)
+            );
         }
+
+        $output = [];
+        $returnValue = 0;
+        CommandUtility::exec($command, $output, $returnValue);
+
+        if ((bool)($this->extensionConfiguration['debug'] ?? false) && $this->getBackendUser() !== null) {
+            $this->getBackendUser()->writelog(
+                4,
+                0,
+                0,
+                0,
+                sprintf('[cs_webp] %s exited with %d. Output was: %s', $command, $returnValue, implode(' ', $output)),
+                []
+            );
+        }
+        GeneralUtility::fixPermissions($file);
     }
 
-    /**
-     * Returns the current BE user.
-     *
-     * @return BackendUserAuthentication|null
-     */
     protected function getBackendUser(): ?BackendUserAuthentication
     {
         return $GLOBALS['BE_USER'] ?? null;
