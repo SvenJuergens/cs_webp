@@ -9,7 +9,6 @@ services:
     resource: '../Classes/*'
 
   SvenJuergens\CsWebp\Service\OptimizeImageService:
-    public: true
     arguments:
       $extensionConfiguration: '@extensionConfig.csweb'
 
@@ -17,9 +16,3 @@ services:
     class: TYPO3\CMS\Core\Configuration\ExtensionConfiguration
     factory: [ '@TYPO3\CMS\Core\Configuration\ExtensionConfiguration', 'get' ]
     arguments: [ 'cs_webp' ]
-
-
-  SvenJuergens\CsWebp\EventListener\AfterFileProcessing:
-    tags:
-      - name: event.listener
-        event: TYPO3\CMS\Core\Resource\Event\AfterFileProcessingEvent
