@@ -24,18 +24,18 @@ class OptimizeImageService
      * @param string|null $extension
      * @return false|void
      */
-    public function process(string $file, string $extension = null)
+    public function process(string $file, ?string $extension = null): void
     {
         if (!file_exists($file)) {
-            return false;
+            return;
         }
         if ($extension === null) {
             $pathInfo = pathinfo($file);
-            if ($pathInfo['extension'] !== null) {
+            if (isset($pathInfo['extension'])) {
                 $extension = $pathInfo['extension'];
             }
         }
-        $extension = strtolower($extension);
+        $extension = strtolower((string)$extension);
 
         if (($extension === 'jpg' || $extension === 'jpeg' || $extension === 'png') && str_contains($file, 'fileadmin/_processed_')) {
             $webpFile = str_replace('.' . $extension, '.webp', $file);
