@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SvenJuergens\CsWebp\Service;
 
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
@@ -9,21 +11,10 @@ use TYPO3\CMS\Core\Utility\MathUtility;
 
 class OptimizeImageService
 {
-    /**
-     * Initialize
-     * @param array $extensionConfiguration
-     */
     public function __construct(
         protected array $extensionConfiguration
     ) {}
 
-    /**
-     * Perform image optimization
-     *
-     * @param string $file
-     * @param string|null $extension
-     * @return false|void
-     */
     public function process(string $file, ?string $extension = null): void
     {
         if (!file_exists($file)) {
@@ -82,11 +73,6 @@ class OptimizeImageService
         GeneralUtility::fixPermissions($file);
     }
 
-    /**
-     * Returns the current BE user.
-     *
-     * @return BackendUserAuthentication|null
-     */
     protected function getBackendUser(): ?BackendUserAuthentication
     {
         return $GLOBALS['BE_USER'] ?? null;

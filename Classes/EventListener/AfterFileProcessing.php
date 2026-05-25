@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SvenJuergens\CsWebp\EventListener;
 
 use SvenJuergens\CsWebp\Service\OptimizeImageService;
